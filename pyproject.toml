@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "mubudemo"
+version = "0.1.0"
+description = ""
+authors = ["PrinceMercy <princemercy@163.com>"]
+license = "apache-2.0"
+
+[tool.poetry.dependencies]
+python = ">=3.6,<4.0"
+pytest = "^6.2.4"
+requests = "^2.25.1"
+
+[tool.poetry.dev-dependencies]
+coverage = "^5.5"
+coveralls = "^3.1.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

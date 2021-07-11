@@ -7,7 +7,7 @@ class BaseApi(object):
     json={}
     data=""
 
-    def set_params(self,**params):
+    def set_params(self,params):
         self.params = params
         return self
 
@@ -33,13 +33,16 @@ class BaseApi(object):
         value = self.response
         for _key in key.split("."):
             print("value---",_key,value,type(value))
-            if isinstance(value,requests.Response): 
-                value = getattr(self.response,_key)
-            elif isinstance(value,requests.structures.CaseInsensitiveDict):
+            if isinstance(value,requests.Response):
+                if _key == "content":
+                    value = self.response.json()
+                else:
+                    value = getattr(self.response,_key)
+            elif isinstance(value,(requests.structures.CaseInsensitiveDict,dict)):
                 value = value[_key]
             # elif isinstance(value,bytes):
             #     value = value[_key]
-            # print("value---",value,type(value))
+            print("value---2",value,type(value),expected_value,type(expected_value))
         # actual_value = getattr(self.response,key)
         assert value == expected_value
         return self

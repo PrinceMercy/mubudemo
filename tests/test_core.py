@@ -37,7 +37,7 @@ def test_httpbin_get():
         .validate("status_code",200)\
         .validate("headers.server",'gunicorn/19.9.0')\
         .validate("headers.content-type","application/json")\
-        .validate("url","http://httpbin.org/get")
+        .validate("content.url","http://httpbin.org/get")
 
 # def test_httpbin_get_with_params():
 #     resp = requests.get(
@@ -52,13 +52,14 @@ def test_httpbin_get():
 def test_httpbin_get_with_params():
     params = {"abc":123,"xyz":456}
     ApiHttpbinGet()\
-        .set_params(abc=123,xyz=456)\
+        .set_params(params)\
         .run()\
         .validate("status_code",200)\
         .validate("headers.server",'gunicorn/19.9.0')\
-        .validate("url","http://httpbin.org/get?abc=123&xyz=456")\
-        # .validate("content.abc","123")\
-        # .validate("content.args.xyz","456")
+        .validate("content.url","http://httpbin.org/get?abc=123&xyz=456")\
+        .validate("content.args.abc","123")\
+        .validate("content.args.xyz","456")\
+        # .validate("content.args",{"abc":123,"xyz":456})
 
 class ApiHttpbinPost(BaseApi):
     url = "http://httpbin.org/post"
@@ -99,7 +100,9 @@ class ApiHttpbinPost(BaseApi):
 def test_httpbin_post():
     ApiHttpbinPost()\
         .run()\
-        .validate("status_code",200)
+        .validate("status_code",200)\
+        .validate("headers.server",'gunicorn/19.9.0')\
+        .validate("content.url","http://httpbin.org/post")
 
 
 # def test_httpbin_post_with_data():
@@ -114,8 +117,21 @@ def test_httpbin_post():
 #     print(resp.json())
 #     assert resp.json()["form"]["abc"] == "123"
 
-def test_httpbin_post_with_data():
+def test_httpbin_post_with_json():
     ApiHttpbinPost()\
         .set_json({"abc":123})\
         .run()\
-        .validate("status_code",200)
+        .validate("status_code",200)\
+        .validate("headers.server",'gunicorn/19.9.0')\
+        .validate("content.url","http://httpbin.org/post")\
+        .validate("content.json.abc",123)\
+        .validate("content.data",'{"abc": 123}')
+
+# def test_httpbin_post_with_data():
+#     ApiHttpbinPost()\
+#         .set_data([1,2])\
+#         .run()\
+#         .validate("status_code",200)\
+#         .validate("headers.server",'gunicorn/19.9.0')\
+#         .validate("content.url","http://httpbin.org/post")\
+#         .validate("content.json.abc",123)

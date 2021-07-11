@@ -35,7 +35,9 @@ class ApiHttpbinGet(BaseApi):
 def test_httpbin_get():
     ApiHttpbinGet().run()\
         .validate("status_code",200)\
-        # .validate("headers['server']",'gunicorn/19.9.0')
+        .validate("headers.server",'gunicorn/19.9.0')\
+        .validate("headers.content-type","application/json")\
+        .validate("url","http://httpbin.org/get")
 
 # def test_httpbin_get_with_params():
 #     resp = requests.get(
@@ -52,7 +54,11 @@ def test_httpbin_get_with_params():
     ApiHttpbinGet()\
         .set_params(abc=123,xyz=456)\
         .run()\
-        .validate("status_code",200)
+        .validate("status_code",200)\
+        .validate("headers.server",'gunicorn/19.9.0')\
+        .validate("url","http://httpbin.org/get?abc=123&xyz=456")\
+        # .validate("content.abc","123")\
+        # .validate("content.args.xyz","456")
 
 class ApiHttpbinPost(BaseApi):
     url = "http://httpbin.org/post"

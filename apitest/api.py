@@ -2,6 +2,7 @@ import requests
 
 class BaseApi(object):
     method = ""
+    url=''
     params = {}
     headers = {}
     json={}
@@ -29,7 +30,7 @@ class BaseApi(object):
                                     )
         return self
 
-    def validate(self,key,expected_value):
+    def validate(self,key:str,expected_value):
         value = self.response
         for _key in key.split("."):
             print("value---",_key,value,type(value))

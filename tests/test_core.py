@@ -1,14 +1,14 @@
-from apitest.api import BaseApi
+from tests.api.httpbin import *
 
 def test_version():
     from apitest import __version__
     assert isinstance(__version__,str)
 
-class ApiHttpbinGet(BaseApi):
-    url = "http://httpbin.org/get"
-    method = "GET"
-    params = {}
-    headers = {"accept":"application/json"}
+# class ApiHttpbinGet(BaseApi):
+#     url = "http://httpbin.org/get"
+#     method = "GET"
+#     params = {}
+#     headers = {"accept":"application/json"}
 
     # def set_params(self,**params):
     #     self.params = params
@@ -61,12 +61,12 @@ def test_httpbin_get_with_params():
         .validate("content.args.xyz","456")\
         # .validate("content.args",{"abc":123,"xyz":456})
 
-class ApiHttpbinPost(BaseApi):
-    url = "http://httpbin.org/post"
-    method = "POST"
-    json = {}
-    data= ""
-    headers = {"accept":"application/json"}
+# class ApiHttpbinPost(BaseApi):
+#     url = "http://httpbin.org/post"
+#     method = "POST"
+#     json = {}
+#     data= ""
+#     headers = {"accept":"application/json"}
 
     # def set_params(self,**params):
     #     self.params = params

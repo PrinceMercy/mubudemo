@@ -29,11 +29,12 @@ class BaseApi(object):
                                     headers=self.headers
                                     )
         return self
-
-    def validate(self,key:str,expected_value):
+    
+    ###约定在validate校验完成功后，再去提取参数值
+    def extract(self,field:str):
         value = self.response
-        for _key in key.split("."):
-            print("value---",_key,value,type(value))
+        for _key in field.split("."):
+            print("ex_value---",_key,value,type(value))
             if isinstance(value,requests.Response):
                 if _key == "content":
                     value = self.response.json()
@@ -41,14 +42,24 @@ class BaseApi(object):
                     value = getattr(self.response,_key)
             elif isinstance(value,(requests.structures.CaseInsensitiveDict,dict)):
                 value = value[_key]
+            print("ex_value---22",_key,value,type(value))
+        return value
+
+    def validate(self,key:str,expected_value):
+        # value = self.response
+        # for _key in key.split("."):
+        #     # print("value---",_key,value,type(value))
+        #     if isinstance(value,requests.Response):
+        #         if _key == "content":
+        #             value = self.response.json()
+        #         else:
+        #             value = getattr(self.response,_key)
+        #     elif isinstance(value,(requests.structures.CaseInsensitiveDict,dict)):
+        #         value = value[_key]
             # elif isinstance(value,bytes):
             #     value = value[_key]
-            print("value---2",value,type(value),expected_value,type(expected_value))
+            # print("value---2",value,type(value),expected_value,type(expected_value))
         # actual_value = getattr(self.response,key)
-        assert value == expected_value
+        actual_value = self.extract(key)
+        assert actual_value == expected_value
         return self
-    
-    ###约定在validate校验完成功后，再去提取参数值
-    def extract(self,field):
-        value = getattr(self.response,field)
-        return value

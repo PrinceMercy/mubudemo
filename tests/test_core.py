@@ -155,11 +155,23 @@ def test_httpbin_parameters_share():
         .validate("content.json.userid","aa1123")
 
 def test_httpbin_extract():
-    ApiHttpbinPost()\
+    api_run = ApiHttpbinPost()\
         .set_json({"abc":123})\
-        .run()\
+        .run()
+
+    status_code =api_run\
         .validate("status_code",200)\
         .extract("status_code")
+    assert status_code == 200
+
+    server = api_run\
+        .validate("status_code",200)\
+        .extract("headers.server")
+    assert server == 'gunicorn/19.9.0'
+
+    accep_json = api_run\
+        .extract("content.json.abc")
+    assert accep_json == 123
 
 def test_httpbin_parameters_extract():
     cookie_data = 234

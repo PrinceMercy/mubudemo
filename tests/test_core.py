@@ -173,18 +173,39 @@ def test_httpbin_extract():
         .extract("content.json.abc")
     assert accep_json == 123
 
-def test_httpbin_parameters_extract():
-    cookie_data = 234
-    ApiHttpbinSetCookies()\
-        .set_params(freeform=cookie_data)\
-        .run()\
+def test_httpbin_setcookies():
+    api_run = ApiHttpbinGetCookies()\
+        .set_cookies("freeform","234")\
+        .set_cookies("freeform2","334")\
+        .run()
+    freeform = api_run\
         .validate("status_code",200)\
         .validate("headers.server",'gunicorn/19.9.0')\
-        .validate("content.cookies.freeform","{}".format(cookie_data))
+        .validate("content.cookies.freeform",'234')\
+        .extract("content.cookies.freeform")
     
+    freeform2 = api_run\
+        .validate("status_code",200)\
+        .validate("headers.server",'gunicorn/19.9.0')\
+        .validate("content.cookies.freeform2",'334')\
+        .extract("content.cookies.freeform2")
+    
+    assert freeform == '234'
+    assert freeform2 == '334'
     # ApiHttpbinGetCookies()\
     #     .run()\
     #     .validate("status_code",200)\
     #     .validate("headers.server",'gunicorn/19.9.0')\
     #     .validate("content.cookies.freeform","{}".format(cookie_data))
 
+def test_httpbin_parameters_extract():
+    cookie_data = 234
+    freeform = ApiHttpbinSetCookies()\
+        .set_params(freeform=cookie_data)\
+        .run()\
+        .validate("status_code",200)\
+        .validate("headers.server",'gunicorn/19.9.0')\
+        .validate("content.cookies.freeform","{}".format(cookie_data))\
+        .extract("content.cookies.freeform")
+    
+    assert freeform == str(cookie_data)

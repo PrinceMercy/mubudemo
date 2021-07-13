@@ -52,13 +52,13 @@ def test_httpbin_get():
 def test_httpbin_get_with_params():
     params = {"abc":123,"xyz":456}
     ApiHttpbinGet()\
-        .set_params(params)\
+        .set_params(a=123,b=231)\
         .run()\
         .validate("status_code",200)\
         .validate("headers.server",'gunicorn/19.9.0')\
-        .validate("content.url","http://httpbin.org/get?abc=123&xyz=456")\
-        .validate("content.args.abc","123")\
-        .validate("content.args.xyz","456")\
+        .validate("content.url","http://httpbin.org/get?a=123&b=231")\
+        .validate("content.args.a","123")\
+        .validate("content.args.b","231")\
         # .validate("content.args",{"abc":123,"xyz":456})
 
 # class ApiHttpbinPost(BaseApi):
@@ -135,3 +135,21 @@ def test_httpbin_post_with_json():
 #         .validate("headers.server",'gunicorn/19.9.0')\
 #         .validate("content.url","http://httpbin.org/post")\
 #         .validate("content.json.abc",123)
+
+def test_httpbin_parameters_share():
+    user_id = "aa1123"
+    ApiHttpbinGet()\
+        .set_params(userid=user_id)\
+        .run()\
+        .validate("status_code",200)\
+        .validate("headers.server",'gunicorn/19.9.0')\
+        .validate("content.url","http://httpbin.org/get?userid=aa1123")\
+        .validate("content.args.userid","aa1123")
+    
+    ApiHttpbinPost()\
+        .set_json({"userid":user_id})\
+        .run()\
+        .validate("status_code",200)\
+        .validate("headers.server",'gunicorn/19.9.0')\
+        .validate("content.url","http://httpbin.org/post")\
+        .validate("content.json.userid","aa1123")

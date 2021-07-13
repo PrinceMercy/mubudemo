@@ -143,7 +143,7 @@ def test_httpbin_parameters_share():
         .run()\
         .validate("status_code",200)\
         .validate("headers.server",'gunicorn/19.9.0')\
-        .validate("content.url","http://httpbin.org/get?userid=aa1123")\
+        .validate("content.url","http://httpbin.org/get?userid={}".format(user_id))\
         .validate("content.args.userid","aa1123")
     
     ApiHttpbinPost()\
@@ -153,3 +153,26 @@ def test_httpbin_parameters_share():
         .validate("headers.server",'gunicorn/19.9.0')\
         .validate("content.url","http://httpbin.org/post")\
         .validate("content.json.userid","aa1123")
+
+def test_httpbin_extract():
+    ApiHttpbinPost()\
+        .set_json({"abc":123})\
+        .run()\
+        .validate("status_code",200)\
+        .extract("status_code")
+
+def test_httpbin_parameters_extract():
+    cookie_data = 234
+    ApiHttpbinSetCookies()\
+        .set_params(freeform=cookie_data)\
+        .run()\
+        .validate("status_code",200)\
+        .validate("headers.server",'gunicorn/19.9.0')\
+        .validate("content.cookies.freeform","{}".format(cookie_data))
+    
+    # ApiHttpbinGetCookies()\
+    #     .run()\
+    #     .validate("status_code",200)\
+    #     .validate("headers.server",'gunicorn/19.9.0')\
+    #     .validate("content.cookies.freeform","{}".format(cookie_data))
+

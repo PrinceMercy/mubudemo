@@ -47,3 +47,8 @@ class BaseApi(object):
         # actual_value = getattr(self.response,key)
         assert value == expected_value
         return self
+    
+    ###约定在validate校验完成功后，再去提取参数值
+    def extract(self,field):
+        value = getattr(self.response,field)
+        return value

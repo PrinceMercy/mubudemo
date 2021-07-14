@@ -1,9 +1,5 @@
 from tests.api.httpbin import *
 
-def test_version():
-    from apitest import __version__
-    assert isinstance(__version__,str)
-
 # class ApiHttpbinGet(BaseApi):
 #     url = "http://httpbin.org/get"
 #     method = "GET"

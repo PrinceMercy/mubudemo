@@ -199,11 +199,13 @@ def test_httpbin_setcookies():
     #     .validate("content.cookies.freeform","{}".format(cookie_data))
 
 def test_httpbin_parameters_extract():
+    #step 1: get value
     cookie_data = ApiHttpbinGetCookies()\
         .set_cookies("freeform2","334")\
         .run()\
         .extract("content.cookies.freeform2")
     
+    #step 2: use value as parameters
     freeform = ApiHttpbinSetCookies()\
         .set_params(freeform=cookie_data)\
         .run()\

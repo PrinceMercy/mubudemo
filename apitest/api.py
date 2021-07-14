@@ -1,4 +1,8 @@
 import requests
+from requests import sessions
+
+#session的共用，session的请求和request的请求是一样的
+session = requests.sessions.Session()
 
 class BaseApi(object):
     method = ""
@@ -8,6 +12,9 @@ class BaseApi(object):
     json={}
     data=""
     cookie = {}
+
+    # def __init__(self) -> None:
+    #     self.response = None
 
     def set_params(self,**params):
         self.params = params
@@ -26,7 +33,7 @@ class BaseApi(object):
         return self
     
     def run(self):
-        self.response = requests.request(self.method,
+        self.response = session.request(self.method,
                                     self.url,
                                     params = self.params,
                                     json = self.json,
@@ -69,3 +76,6 @@ class BaseApi(object):
         actual_value = self.extract(key)
         assert actual_value == expected_value
         return self
+    
+    def get_response(self):
+        return self.response

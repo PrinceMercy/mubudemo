@@ -1,3 +1,4 @@
+# from requests.api import request
 from tests.api.httpbin import *
 
 # class ApiHttpbinGet(BaseApi):
@@ -211,3 +212,18 @@ def test_httpbin_parameters_extract():
         .extract("content.cookies.freeform")
     
     assert freeform == str(cookie_data)
+
+def test_httpbin_login_status():
+    #step 1:login and get cookie
+    ApiHttpbinSetCookies()\
+        .set_params(freeform="334")\
+        .run()
+    
+    #step 2:request another api,check cookie
+    resp = ApiHttpbinPost()\
+        .set_json({"abc":123})\
+        .run()\
+        .get_response()
+    request_header = resp.request.headers
+    # print("request_headers=====",request_header)
+    assert "freeform=334" in request_header["Cookie"]
